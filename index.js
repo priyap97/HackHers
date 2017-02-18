@@ -31,6 +31,15 @@ app.post('/accountCreated',function(req,res){
 	var mdd=req.body.mdd;
 	var anxiety=req.body.anxiety;
 	var otherInfo=req.body.otherInfo;
+	if(firstName === null || lastName === null){
+		res.redirect('/accountCreated')
+
+	}
+	if(phone.length !=== 8){
+		res.redirect('/accountCreated')
+	}
+	
+	
 	//error checking before continuing
 	console.log(firstName+" "+lastName+" has phone number "+phone+"\n mdd="+mdd+"\n anxiety="+anxiety+"\n otherInfo=\n"+otherInfo);
 	db.serialize(function() {
