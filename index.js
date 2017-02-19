@@ -4,9 +4,9 @@ var bodyParser = require("body-parser");
 var sqlite3 = require('sqlite3').verbose()
 var app=express();
 var db = new sqlite3.Database('dataa.db');
-/*db.serialize(function() {
+db.serialize(function() {
 	db.run("CREATE TABLE PEEPS (FirstName varchar(255),LastName varchar(255),Phone varchar(10),password varchar(255),mdd varchar(255),anxiety varchar(255),otherInfo varchar(255))");
-}); */
+});
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.get('/',function(req,res){
@@ -36,11 +36,11 @@ app.post('/accountCreated',function(req,res){
 		res.redirect('/accountCreated')
 
 	}
-	if(phone.length !=== 8){
+	if(phone.length !== 10){
 		res.redirect('/accountCreated')
 	}
-	
-	
+
+
 	//error checking before continuing
 	console.log(firstName+" "+lastName+" has phone number "+phone+"\n mdd="+mdd+"\n anxiety="+anxiety+"\n otherInfo=\n"+otherInfo);
 	db.serialize(function() {
