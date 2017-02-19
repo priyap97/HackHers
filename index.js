@@ -24,6 +24,11 @@ app.post('/apath',function(req,res){
 app.get('/createAccount',function(req,res){
 	res.sendFile(path.join(__dirname + "/createAccount.html"));
 });
+app.get('/login',function(req,res){
+	
+	res.sendFile(path.join(__dirname + "/login.html"));
+
+});
 app.post('/accountCreated',function(req,res){
 	var firstName=req.body.firstName;
 	var lastName=req.body.lastName;
@@ -48,8 +53,22 @@ app.post('/accountCreated',function(req,res){
 		   stmt.run(firstName,lastName,phone,password,mdd,anxiety,otherInfo);
 		   stmt.finalize();
 	});
-	db.close();
 	res.send("Thank you!");
+});
+app.post('/loginauth',function(req,res){
+	     var user = req.body.Username;
+	     var pass = req.body.Password;
+	     db.serialize(function() {
+
+		     db.all("SELECT password from PEEPS where Phone="+user,function(err,rows){
+			     console.log(rows);
+		
+		//rows contain values while errors, well you can figure out.
+});
+          });
+	db.close()
+	res.send("didnt error");
+
 });
 app.listen(8080,function(){
 	console.log("priya knows javascript");
