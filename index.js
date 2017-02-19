@@ -3,6 +3,7 @@ var path = require("path");
 var bodyParser = require("body-parser");
 var sqlite3 = require('sqlite3').verbose()
 var app=express();
+var userinfo = [];
 app.use(express.static('public'))
 var cookieParser = require('cookie-parser')
 //var home=require('./routes/home');
@@ -99,36 +100,52 @@ app.get('/list',function(req,res){
 	console.log(req.cookies);
 	var data = req.cookies.kek;
 	listeners.push(data);
-	res.sendFile(path.join(__dirname + "/room.html"));
+	if(data.islisten ==='true'){
+		
+		res.send('Has MDD, has  anxiety, Here is some other info about  me\nIf your talker has MDD, please be careful to ensure that they are not in a crisis/suicidal situation. If they appear excessively distressed, advise them to call 911. If your talker has anxiety issues, remind them to breathe and focus on their surroundings in order to curb any panic or anxiety attacks. Also take the other information section into account and be sure not to press them on triggering ideas.');
+	}
+	else{
+		res.sendFile(path.join(__dirname + "/room.html"));
+	}
 	//res.send("DONE");
 });
 app.get('/sendlist',function(req,res){
 	res.send(listeners);
 });
 app.post('/generateToken',function(req,res){
-	var c=new twilio.Capability('AC8632c0885d33bcf38b8eaa6cc6a33f87','fba3f82a812fc559b22dd979c7351b9c');
-	c.allowClientOutgoing('APd70a1be33b26aa3756cba7ea221daeb3');
+	var c=new twilio.Capability('SID','AUTHTOEJ');
+	c.allowClientOutgoing('APPSID');
 	var tok=c.generate();
+	console.log(tok);
 	var send={
 		'token':tok
 	}
-	res.send(tok);
+	  res.send(send);
 });
-app.post('/connect',twilio.webhook({validate: false},function(req,res){
+app.post('/connect',twilio.webhook({validate: false}),function(req,res){
+
+	console.log(req.cookies);
 	var phoneNumber=req.body.phoneNumber;
 	var callerId='18562427020';
+        var twiml = new twilio.TwimlResponse();
 	var numberDialer=function(dial){
 		dial.number(phoneNumber);
-	});
+	};
 	var clientDialer=function(dial){
 		dial.client("support_agent");
-	});
+	};
+		
 	if (phoneNumber != null) {
 		twiml.dial({callerId : callerId}, numberDialer);
 	  }else {
 		twiml.dial({callerId : callerId}, clientDialer);
 	  }
+	   
 	  res.send(twiml.toString());
+});
+
+app.get('/talkerdata',function(req,res){
+	res.send(userinfo);
 });
 app.listen(8080,function(){
 	console.log("priya knows javascript");

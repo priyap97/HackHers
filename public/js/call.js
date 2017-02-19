@@ -1,5 +1,6 @@
 $(document).ready(function(){
 	$.post('/generateToken',function(data){
+		console.log(data);
 		Twilio.Device.setup(data.token);
 	});
 	//function updat
@@ -8,6 +9,7 @@ $(document).ready(function(){
 	});
 	$.get('/sendlist',function(data,err){
 		var isListener="";
+		console.log(data)
 		var cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1");
 		for(var i=0;i<data.length;i++){
 			if(cookieValue!==data[i].phone && data[i].islisten==='true') {
@@ -31,11 +33,17 @@ $(document).ready(function(){
 			//updateCallStatus("In call with support");
 		  }
 		});
+		Twilio.Device.disconnect(function(connection) {
+  // Disable the hangup button and enable the call buttons
+ 		 Twilio.Device.disconnectAll();
+
+		});
 
 		function callCustomer(phoneNumber){
-			updateCallStatus("Calling");
 			var params={"phoneNumber":phoneNumber};
 			Twilio.Device.connect(params);
 		}
+		console.log(isListener);
+		callCustomer(isListener);
 	});
 });
