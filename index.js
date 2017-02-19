@@ -5,7 +5,7 @@ var sqlite3 = require('sqlite3').verbose()
 var app=express();
 var db = new sqlite3.Database('dataa.db');
 db.serialize(function() {
-	db.run("CREATE TABLE PEEPS (FirstName varchar(255),LastName varchar(255),Phone varchar(10),password varchar(255),mdd varchar(255),anxiety varchar(255),otherInfo varchar(255))");
+	//db.run("CREATE TABLE PEEPS (FirstName varchar(255),LastName varchar(255),Phone varchar(10),password varchar(255),mdd varchar(255),anxiety varchar(255),otherInfo varchar(255))");
 });
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
