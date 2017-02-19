@@ -3,7 +3,11 @@ var path = require("path");
 var bodyParser = require("body-parser");
 var sqlite3 = require('sqlite3').verbose()
 var app=express();
+app.use(express.static('public'))
+var cookieParser = require('cookie-parser')
+app.use(cookieParser());
 var db = new sqlite3.Database('dataa.db');
+var listeners=[]
 db.serialize(function() {
 	//db.run("CREATE TABLE PEEPS (FirstName varchar(255),LastName varchar(255),Phone varchar(10),password varchar(255),mdd varchar(255),anxiety varchar(255),otherInfo varchar(255))");
 });
@@ -65,6 +69,7 @@ app.post('/loginauth',function(req,res){
 					res.redirect('/login')	
 				    }
 			     	else{
+					 res.cookie('username',user, { maxAge: 900000, httpOnly: false })
 					res.redirect("/thepage");
 				}
 		
@@ -77,6 +82,27 @@ app.get('/thepage',function(req,res){
 	res.sendFile(path.join(__dirname + "/radio.html"));
 	
 });
+app.post('/auth', function(req,res){
+	var cook = { 
+			'phone':req.cookies.username,
+			'islisten': req.body.listen
+	}
+	res.cookie('kek',cook,{maxAge:900000, httpOnly:false});
+	//res.sendFile(path.join(__dirname + "/list.html"));
+	//res.send("DONE");
+	res.redirect('/list');
+});
+app.get('/list',function(req,res){
+	console.log(req.cookies);
+	var data = req.cookies.kek;
+	listeners.push(data);
+	res.sendFile(path.join(__dirname + "/room.html"));
+	//res.send("DONE");
+});
+app.get('/sendlist',function(req,res){
+	res.send(listeners);
+});
+
 app.listen(8080,function(){
 	console.log("priya knows javascript");
 });
