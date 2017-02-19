@@ -61,14 +61,21 @@ app.post('/loginauth',function(req,res){
 	     db.serialize(function() {
 
 		     db.all("SELECT password from PEEPS where Phone="+user,function(err,rows){
-			     console.log(rows);
+			     if(rows[0]===null || pass !== rows[0].password){
+					res.redirect('/login')	
+				    }
+			     	else{
+					res.redirect("/thepage");
+				}
 		
 		//rows contain values while errors, well you can figure out.
 });
           });
-	db.close()
-	res.send("didnt error");
 
+});
+app.get('/thepage',function(req,res){
+	res.sendFile(path.join(__dirname + "/radio.html"));
+	
 });
 app.listen(8080,function(){
 	console.log("priya knows javascript");
