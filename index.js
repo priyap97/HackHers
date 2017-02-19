@@ -5,7 +5,7 @@ var sqlite3 = require('sqlite3').verbose()
 var app=express();
 var db = new sqlite3.Database('dataa.db');
 /*db.serialize(function() {
-	db.run("CREATE TABLE PEEPS (FirstName varchar(255),LastName varchar(255),Phone varchar(10),mdd varchar(255),anxiety varchar(255),otherInfo varchar(255))");
+	db.run("CREATE TABLE PEEPS (FirstName varchar(255),LastName varchar(255),Phone varchar(10),password varchar(255),mdd varchar(255),anxiety varchar(255),otherInfo varchar(255))");
 }); */
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -28,6 +28,7 @@ app.post('/accountCreated',function(req,res){
 	var firstName=req.body.firstName;
 	var lastName=req.body.lastName;
 	var phone=req.body.phone;
+	var password=req.body.password;
 	var mdd=req.body.mdd;
 	var anxiety=req.body.anxiety;
 	var otherInfo=req.body.otherInfo;
@@ -43,10 +44,9 @@ app.post('/accountCreated',function(req,res){
 	//error checking before continuing
 	console.log(firstName+" "+lastName+" has phone number "+phone+"\n mdd="+mdd+"\n anxiety="+anxiety+"\n otherInfo=\n"+otherInfo);
 	db.serialize(function() {
-		 var stmt = db.prepare("INSERT INTO PEEPS VALUES (?,?,?,?,?,?)");
-		   stmt.run(firstName,lastName,phone,mdd,anxiety,otherInfo);
+		 var stmt = db.prepare("INSERT INTO PEEPS VALUES (?,?,?,?,?,?,?)");
+		   stmt.run(firstName,lastName,phone,password,mdd,anxiety,otherInfo);
 		   stmt.finalize();
-
 	});
 	db.close();
 	res.send("Thank you!");
